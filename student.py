@@ -1,8 +1,8 @@
 class Student:
-    def __init__(self, name, student_id, grade):
+    def __init__(self, name, student_id):
         self.name = name
         self.student_id = student_id
-        self.__grade = grade
+        self.__grade = []
     
     def get_grades(self):
         return f'{self.__grade}'
@@ -37,41 +37,45 @@ class Student:
            return "F"
 
     def display_info(self):
-         print("Name: ",self.name)
+         print("\nName: ",self.name)
          print("Student ID: ",self.student_id)
          print("Grade: ",self.__grade)
          print("Average grade: ",self.calculate_average())
          print(f"Calculated grade: {self.calculate_grade()}")
 
 class UngraduateStudent(Student):
-    def __init__(self, name, id, grade, major):
-        super().__init__(name, id, grade)
+    def __init__(self, name, student_id, major):
+        super().__init__(name, student_id)
         self.major=major
     
     def display_info(self):
-        print("Student Name:", self.name)
-        print("Student ID:", self.id)
-        print("Grades:", self.grade)
+        super().display_info()
         print("Major:", self.major)
 
 class GraduateStudent(Student):
-    def __init__(self, name, id, grade, program_title):
-        super().__init__(name, id, grade)
+    def __init__(self, name, student_id, program_title):
+        super().__init__(name, student_id)
         self.program_title=program_title
         
     def display_info(self):
-        print("Student Name:", self.name)
-        print("Student ID:", self.id)
-        print("Grades:", self.grade)
+        super().display_info()
         print("Program Title:", self.program_title)
 
-m=Student("Mustafa",16060410,[95,85])
-m.get_grades()
+
+m=Student("Mustafa",16060410)
+m.add_grades(95)
+m.add_grades(87)
 m.add_grades(85)
 m.display_info()
 
-#n=UngraduateStudent("Ahmed",28424891,90,"Mechatronics")
-#n.display_info()
+n=UngraduateStudent("Ahmed",28424891,"Mechatronics")
+n.add_grades(90)
+n.add_grades(99)
+n.add_grades(92)
+n.display_info()
 
-#o=GraduateStudent("Mustafa Hazem",2600108,100,"EEE")
-#o.display_info()
+o=GraduateStudent("Mustafa Hazem",2600108,"EEE")
+o.add_grades(100)
+o.add_grades(100)
+o.add_grades(100)
+o.display_info()
