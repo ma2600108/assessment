@@ -3,9 +3,9 @@ class Student:
         self.name = name
         self.student_id = student_id
         self.__grade = []
-    
+
     def get_grades(self):
-        return f'{self.__grade}'
+        return self.__grade
     
     def add_grades(self, grade):
        if 100>=grade>=0:  
@@ -40,8 +40,21 @@ class Student:
          print("\nName: ",self.name)
          print("Student ID: ",self.student_id)
          print("Grade: ",self.__grade)
-         print("Average grade: ",self.calculate_average())
+         print("Average grade: ",round(self.calculate_average(), 2))
          print(f"Calculated grade: {self.calculate_grade()}")
+
+    def grades_sort(student_list):
+      n=len(student_list)
+      for i in range(n-1):
+          for j in range(n-i-1):
+             if student_list[j].calculate_average()>student_list[j+1].calculate_average():
+                student_list[j],student_list[j+1]=student_list[j+1],student_list[j]
+      return student_list
+
+      #file=open("students.txt","w")
+      # for s in student_list:
+      #   file.write(f"{s.name} | {s.student_id} | {s.get_grades()} | {s.calculate_average()} | {s.calculate_grade()}\n") 
+      # file.close()
 
 class UngraduateStudent(Student):
     def __init__(self, name, student_id, major):
@@ -61,21 +74,67 @@ class GraduateStudent(Student):
         super().display_info()
         print("Program Title:", self.program_title)
 
+def save_students(students, filename):
+    file = open(filename, "w")                       # open for writing
+    for s in students:
+        if isinstance(s, GraduateStudent):
+            kind, extra = "Graduate", s.program_title
+        elif isinstance(s, UngraduateStudent):
+            kind, extra = "Undergraduate", s.major
+        else:
+            kind, extra = "Student", ""
+        grades = ";".join(str(g) for g in s.get_grades())
+        file.write(kind + "," + s.name + "," + str(s.student_id) + "," + extra + "," + grades + "\n")
+    file.close()                                      # always close the file
+    print("Saved", len(students), "students to", filename)
 
-m=Student("Mustafa",16060410)
-m.add_grades(95)
-m.add_grades(87)
-m.add_grades(85)
-m.display_info()
+def read_students(filename):
+    students = []
+    try:
+        file = open(filename, "r")                    # open for reading
+        for line in file:
+            line = line.strip()
+            if line == "":
+                continue
+            kind, name, student_id, extra, grades = line.split(",")
+            if kind == "Graduate":
+                s = GraduateStudent(name, student_id, extra)
+            elif kind == "Undergraduate":
+                s = UngraduateStudent(name, student_id, extra)
+            else:
+                s = Student(name, student_id)
+            if grades != "":
+                for g in grades.split(";"):
+                    s.add_grades(float(g))
+            students.append(s)
+        file.close()                                  # always close the file
+    except FileNotFoundError:
+        print("Error: the file", filename, "does not exist")
+    return students
+
+#m=Student("Mustafa",16060410)
+#m.add_grades(95)
+#m.add_grades(87)
+#m.add_grades(85)
+#m.display_info()
 
 n=UngraduateStudent("Ahmed",28424891,"Mechatronics")
 n.add_grades(90)
 n.add_grades(99)
 n.add_grades(92)
-n.display_info()
+#n.display_info()
 
 o=GraduateStudent("Mustafa Hazem",2600108,"EEE")
 o.add_grades(100)
 o.add_grades(100)
 o.add_grades(100)
-o.display_info()
+#o.display_info()
+
+save_students([n, o], "students.txt")
+
+loaded = read_students("students.txt")
+for s in loaded:
+    s.display_info()
+    print()
+
+read_students("missing_file.txt") 

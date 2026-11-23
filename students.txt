@@ -1,0 +1,2 @@
+Undergraduate,Ahmed,28424891,Mechatronics,90;99;92
+Graduate,Mustafa Hazem,2600108,EEE,100;100;100
